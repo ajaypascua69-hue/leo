@@ -74,6 +74,10 @@ Start with a small configuration. Training from scratch on a small corpus produc
 
 See [DATA_POLICY.md](DATA_POLICY.md) and [DATA_SOURCES.md](DATA_SOURCES.md). A public URL is not proof that content is free to use. Review each exact dataset revision, license, attribution and ShareAlike terms, privacy implications, source provenance, and intended deployment. Do not ingest arbitrary web crawls, private conversations, paid datasets, or material with unclear rights. Keep a record of licenses and preprocessing. Obtain qualified legal review before commercial release where needed.
 
+## Optional integrations
+
+Leo now has a first permission-gated integration foundation for local tools and optional external AI services. Connectors are separate from the model core, are not enabled by default, require an explicit allow-list and per-call confirmation, and require a separate network permission when applicable. This foundation does not yet connect named providers or include a connector UI. See [INTEGRATIONS.md](INTEGRATIONS.md).
+
 ## Development roadmap
 
 1. Expand the data manifest and quality controls to handle many languages without assuming every language is equally represented.
