@@ -63,3 +63,18 @@ A public download URL is **not** proof that content is free to use. Keep a recor
 The model architecture and training code in this repository are original project code. PyTorch is an external training dependency; see its license and the licenses of all transitive dependencies before redistribution. Dataset licenses remain separate from the code license.
 
 This project does not claim to reproduce the capabilities of large commercial models. Progress will be reported using reproducible training settings and held-out evaluations.
+
+
+## Optional hosted open-weight model providers
+
+Leo's original from-scratch model remains the independent core. Optional hosted
+models can be called through the server-side OpenRouter adapter; their weights
+are not stored in Git. The initial Apache-2.0 allow-list includes Gemma 4 31B
+Instruct for general tasks and Cohere North Mini Code for coding. See
+[`MODEL_PROVIDERS.md`](MODEL_PROVIDERS.md) and
+[`leo/providers/openrouter.py`](leo/providers/openrouter.py) for setup.
+
+Hosted free endpoints have quotas and availability can change. Configure
+`OPENROUTER_API_KEY` as a backend secret only. Never place it in frontend code
+or commit it to this repository. This integration is optional and does not
+replace Leo's own architecture or training pipeline.
