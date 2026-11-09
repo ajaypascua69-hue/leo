@@ -22,12 +22,12 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Put approved plain-text training material in `data/train.txt` and validation material in `data/valid.txt`. Keep raw source files and license records outside Git unless redistribution is explicitly allowed.
+Leo is intended to learn **English and Filipino/Tagalog** from the beginning. Keep both languages represented in the source collection and record each document's language (`en`, `fil`, `tl`, or `mixed`). Do not assume a dataset is approved just because it is public.\n\nFor a safer corpus workflow, place source text files under `data/` and create `data/manifest.jsonl` using the example at [`examples/manifest.example.jsonl`](examples/manifest.example.jsonl). Review each source and set `approved` to `true` only after checking its exact license, terms, provenance, privacy, and intended use. Then prepare document-level train/validation/test splits (exact duplicates are removed) with:\n\n```bash\npython prepare_data.py --manifest data/manifest.jsonl --data-dir data --out-dir data/processed\n```\n\nThis creates `data/processed/train.txt`, `valid.txt`, `test.txt`, and `corpus_report.json`. Train using the prepared train and validation files. Keep raw source files, manifests, and corpus reports out of public Git unless redistribution is explicitly allowed.
 
 Train a small first model:
 
 ```bash
-python train.py --train data/train.txt --valid data/valid.txt --steps 5000 --batch-size 16 --block-size 256 --device auto
+python train.py --train data/processed/train.txt --valid data/processed/valid.txt --steps 5000 --batch-size 16 --block-size 256 --device auto
 ```
 
 Generate text:
