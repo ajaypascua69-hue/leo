@@ -21,6 +21,42 @@ The first integration layer adds:
 No third-party AI provider is enabled by default. The included tests use mock
 adapters and make no network requests.
 
+## First working connector: local OpenAI-compatible server
+
+A real connector is included for a local inference server exposing the
+`/v1/chat/completions` endpoint (for example, LM Studio or an Ollama
+OpenAI-compatible endpoint). It uses only Python's standard library and does
+not require a paid API. The connector accepts loopback addresses only, so it
+cannot silently send prompts to a remote provider.
+
+Example:
+
+```python
+from leo.integrations import IntegrationRegistry, LocalOpenAICompatibleConnector
+
+connector = LocalOpenAICompatibleConnector(
+    base_url="http://127.0.0.1:1234/v1",
+    model="your-loaded-local-model",
+)
+registry = IntegrationRegistry()
+registry.register(connector)
+
+reply = registry.invoke(
+    connector.manifest.integration_id,
+    "Hello Leo",
+    allowed_integrations={connector.manifest.integration_id},
+    user_confirmed=True,
+    network_enabled=True,  # explicit permission for local loopback access
+)
+print(reply.content)
+```
+
+Start the local model server and load a model before invoking this connector.
+The connector does not include or download a model. A computer running the
+server and the Leo process must be able to reach the same loopback endpoint.
+This first connector is for development on a computer; Android packaging and
+on-device runtime integration are separate future work.
+
 ## Connecting services later
 
 A connector can be written for:
