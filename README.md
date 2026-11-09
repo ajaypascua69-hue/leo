@@ -10,7 +10,7 @@ Build one independent general-purpose AI brain that can grow across hardware gen
 
 - Multilingual understanding and generation, with a long-term target of 50+ languages.
 - Conversation, writing, translation, reasoning, mathematics, and learning.
-- Coding and software development, including ordinary consumer AI applications—not only developer tools.
+- Coding and software development for ordinary non-AI applications, websites, games, and desktop/mobile software.
 - Document and data analysis.
 - Tool use, retrieval, and task execution through separately engineered, permission-controlled systems.
 - Mobile, desktop, and laptop deployment.
@@ -81,7 +81,7 @@ See [DATA_POLICY.md](DATA_POLICY.md) and [DATA_SOURCES.md](DATA_SOURCES.md). A p
 3. Train and evaluate a small random-init baseline; publish actual loss curves and language-specific results.
 4. Develop a multilingual tokenizer from scratch and compare it fairly with the byte baseline.
 5. Improve architecture, data mixture, training efficiency, and evaluation based on measured evidence.
-6. Add reasoning, math, coding, instruction-following, retrieval, and permission-controlled tools as measurable capabilities.
+6. Add reasoning, math, general coding, instruction-following, retrieval, and permission-controlled tools as measurable capabilities. AI-application generation is outside the project scope.
 7. Build shared inference interfaces and separate Android, desktop, and laptop user interfaces.
 8. Add quantization and platform runtimes only after quality and compatibility tests.
 
