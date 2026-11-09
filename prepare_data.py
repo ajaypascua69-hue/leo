@@ -1,20 +1,30 @@
-"""Prepare a provenance-checked, document-level corpus for Leo.
+"""Prepare a provenance-checked, document-level multilingual corpus for Leo.
 
 Input:
   data/manifest.jsonl
 Each line is JSON with: path, approved, license, license_url, source_url, language.
 Only explicitly approved entries with traceable license/source URLs are included.
+Language accepts ISO 639 codes, BCP 47-style tags, or "mixed".
 """
 import argparse
 import hashlib
 import json
 import random
+import re
+from collections import Counter
 from pathlib import Path
 
-ALLOWED_LANGUAGES = {"en", "fil", "tl", "mixed"}
+LANGUAGE_TAG_RE = re.compile(r"^(?:mixed|[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*)$", re.IGNORECASE)
+
+
+def is_language_tag(value: str) -> bool:
+    """Accept ISO 639 language codes and practical BCP 47-style tags."""
+    return isinstance(value, str) and bool(LANGUAGE_TAG_RE.fullmatch(value.strip()))
+
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
 
 def load_documents(manifest_path: Path, root: Path):
     records = []
@@ -35,8 +45,12 @@ def load_documents(manifest_path: Path, root: Path):
         if not all(isinstance(item[k], str) and item[k].strip() for k in
                    ("path", "license", "license_url", "source_url", "language")):
             raise ValueError(f"Manifest line {line_no}: required metadata must be non-empty strings")
-        if item["language"] not in ALLOWED_LANGUAGES:
-            raise ValueError(f"Manifest line {line_no}: language must be one of {sorted(ALLOWED_LANGUAGES)}")
+        language = item["language"].strip()
+        if not is_language_tag(language):
+            raise ValueError(
+                f"Manifest line {line_no}: language must be an ISO 639 code, "
+                "a BCP 47-style tag (for example pt-BR or zh-Hans), or 'mixed'"
+            )
         source = (root / item["path"]).resolve()
         try:
             source.relative_to(root.resolve())
@@ -58,11 +72,12 @@ def load_documents(manifest_path: Path, root: Path):
                 "license": item["license"],
                 "license_url": item["license_url"],
                 "source_url": item["source_url"],
-                "language": item["language"],
+                "language": language,
             })
     if len(records) < 3:
         raise ValueError("Need at least 3 unique approved non-empty documents for train/valid/test splits")
     return records
+
 
 def split_documents(records, seed, valid_fraction, test_fraction):
     if valid_fraction <= 0 or test_fraction <= 0 or valid_fraction + test_fraction >= 1:
@@ -75,6 +90,13 @@ def split_documents(records, seed, valid_fraction, test_fraction):
     if n_valid + n_test >= n:
         raise ValueError("Not enough documents for requested split fractions")
     return shuffled[n_valid+n_test:], shuffled[:n_valid], shuffled[n_valid:n_valid+n_test]
+
+
+def render_document(record):
+    # A visible text marker works with the current byte tokenizer; a future
+    # learned tokenizer may map this convention to dedicated special tokens.
+    return f"[LEO_LANGUAGE={record['language']}]\n{record['text']}"
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -93,18 +115,26 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
 
     for name, split in (("train", train), ("valid", valid), ("test", test)):
-        (out / f"{name}.txt").write_text("\n\n".join(x["text"] for x in split) + "\n", encoding="utf-8")
+        rendered = "\n\n".join(render_document(x) for x in split) + "\n"
+        (out / f"{name}.txt").write_text(rendered, encoding="utf-8")
 
     report = {
         "seed": args.seed,
         "documents": len(records),
         "splits": {"train": len(train), "valid": len(valid), "test": len(test)},
+        "language_counts": dict(sorted(Counter(x["language"] for x in records).items())),
+        "split_language_counts": {
+            name: dict(sorted(Counter(x["language"] for x in split).items()))
+            for name, split in (("train", train), ("valid", valid), ("test", test))
+        },
         "items": [{k: v for k, v in x.items() if k != "text"} for x in records],
         "note": "Metadata records are not a legal determination. Human review is required before setting approved=true."
     }
     (out / "corpus_report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Prepared {len(records)} unique approved documents: train={len(train)}, valid={len(valid)}, test={len(test)}")
+    print(f"Language counts: {report['language_counts']}")
     print(f"Outputs: {out.resolve()}")
+
 
 if __name__ == "__main__":
     main()
