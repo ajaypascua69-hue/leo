@@ -56,6 +56,26 @@ python prepare_data.py --manifest data/manifest.jsonl --data-dir data --out-dir 
 
 The script creates train/validation/test text files and a corpus report with per-language counts. Each document is prefixed with a readable language marker to make its declared language visible during training. Keep raw source files, manifests, and reports out of public Git unless redistribution is explicitly allowed.
 
+### Add lessons prepared with ChatGPT
+
+ChatGPT can help draft explanations, examples, and exercises. Treat those outputs as candidate teaching material, not verified facts. Review accuracy, privacy, safety, and usage rights yourself before marking a lesson approved.
+
+Create `teacher_lessons.jsonl`, one JSON object per line, using this structure:
+
+```json
+{"language":"en","topic":"basic mathematics","question":"What is 7 times 8?","answer":"7 times 8 is 56 because 7 groups of 8 make 56.","reviewed":true,"approved_for_training":true,"license":"record the applicable permission or license after review","license_url":"https://example.org/terms","source_url":"https://chatgpt.com/"}
+```
+
+Use the actual applicable terms and source details; the example URLs and license text are placeholders, not a legal determination. Unreviewed or unapproved rows are skipped.
+
+```bash
+python prepare_teacher_lessons.py --input teacher_lessons.jsonl --data-dir data/teacher_lessons --manifest data/teacher_manifest.jsonl
+python prepare_data.py --manifest data/teacher_manifest.jsonl --data-dir . --out-dir data/teacher_processed
+python train.py --train data/teacher_processed/train.txt --valid data/teacher_processed/valid.txt --steps 5000 --device auto
+```
+
+This adds teacher-written examples to ordinary next-token training. It is not yet a dedicated instruction-tuning or preference-optimization pipeline, and it does not make Leo capable by itself. Keep a separate held-out test set and measure results before claiming improvement.
+
 Train a small baseline:
 
 ```bash
