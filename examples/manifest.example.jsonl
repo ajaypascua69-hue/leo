@@ -1,2 +1,6 @@
 {"path":"sources/example_english.txt","approved":false,"license":"REPLACE_WITH_EXACT_LICENSE","license_url":"https://example.org/license","source_url":"https://example.org/source","language":"en"}
 {"path":"sources/example_filipino.txt","approved":false,"license":"REPLACE_WITH_EXACT_LICENSE","license_url":"https://example.org/license","source_url":"https://example.org/source","language":"fil"}
+{"path":"sources/example_japanese.txt","approved":false,"license":"REPLACE_WITH_EXACT_LICENSE","license_url":"https://example.org/license","source_url":"https://example.org/source","language":"ja"}
+{"path":"sources/example_korean.txt","approved":false,"license":"REPLACE_WITH_EXACT_LICENSE","license_url":"https://example.org/license","source_url":"https://example.org/source","language":"ko"}
+{"path":"sources/example_portuguese_brazil.txt","approved":false,"license":"REPLACE_WITH_EXACT_LICENSE","license_url":"https://example.org/license","source_url":"https://example.org/source","language":"pt-BR"}
+{"path":"sources/example_chinese_simplified.txt","approved":false,"license":"REPLACE_WITH_EXACT_LICENSE","license_url":"https://example.org/license","source_url":"https://example.org/source","language":"zh-Hans"}
