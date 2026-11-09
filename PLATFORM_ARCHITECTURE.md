@@ -34,8 +34,7 @@ Support CPU and accelerator-backed inference where available. Desktop builds can
 Keep the model core independent from optional systems:
 - Retrieval/document indexing.
 - Math and data-analysis tools.
-- Sandboxed code execution and test/build orchestration.
-- App templates and project generators.
+- Sandboxed code execution and test/build orchestration for general software projects.
 - Speech, image, and other modalities as separate modules.
 - Permissioned connectors and internet access.
 
@@ -52,4 +51,4 @@ Prefer open-source tools and free resources where available. Do not make paid mo
 3. Build and test a desktop reference runtime.
 4. Add an Android inference build after model export/runtime compatibility is demonstrated.
 5. Add quantized model variants and device profiles.
-6. Add the app-building agent as a permission-controlled orchestration layer, with real build/test tools on supported computers.
+6. Add permission-controlled coding assistance and general software build/test workflows. Building AI-powered applications is explicitly out of scope.
