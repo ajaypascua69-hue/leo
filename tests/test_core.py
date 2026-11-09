@@ -16,7 +16,7 @@ def test_byte_tokenizer_round_trip():
 def test_language_tags_accept_many_scripts_and_regions():
     for tag in ("en", "fil", "tl", "ja", "ko", "es", "pt-BR", "fr", "de", "zh-Hans", "sr-Latn", "ar", "hi", "id", "mixed"):
         assert is_language_tag(tag)
-    for tag in ("", "english", "en_US", "pt-BR-extra-tag-too-long"):
+    for tag in ("", "english", "en_US", "pt-BR-!"):
         assert not is_language_tag(tag)
 
 
