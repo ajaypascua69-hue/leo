@@ -78,3 +78,18 @@ Hosted free endpoints have quotas and availability can change. Configure
 `OPENROUTER_API_KEY` as a backend secret only. Never place it in frontend code
 or commit it to this repository. This integration is optional and does not
 replace Leo's own architecture or training pipeline.
+
+
+## Optional FreeLLMAPI multi-provider router
+
+Leo can optionally connect to a separately maintained FreeLLMAPI instance through
+an OpenAI-compatible client. The upstream project is pinned as a Git submodule at
+[`integrations/freellmapi`](integrations/freellmapi), and Leo's small Python
+adapter is [`leo/providers/freellmapi.py`](leo/providers/freellmapi.py).
+See [`docs/FREELLMAPI_INTEGRATION.md`](docs/FREELLMAPI_INTEGRATION.md) for setup.
+
+This is an optional inference service, not Leo's own model. **Free does not mean
+unlimited or guaranteed 24/7:** provider quotas and terms vary, and hosting can
+cost money. Use only verified free providers, keep paid providers and paid
+fallbacks disabled, and do not purchase the upstream premium catalog. Never
+commit API keys or place them in client-side/mobile code.
